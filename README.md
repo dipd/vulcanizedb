@@ -36,7 +36,7 @@ data from VulcanizeDB's underlying Postgres database and making it accessible.
 
 ### Dependencies
  - Go 1.11+
- - Postgres 10.6
+ - Postgres 11.2
  - Ethereum Node
    - [Go Ethereum](https://ethereum.github.io/go-ethereum/downloads/) (1.8.23+)
    - [Parity 1.8.11+](https://github.com/paritytech/parity/releases)
