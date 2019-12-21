@@ -1,6 +1,6 @@
 FROM golang:alpine as builder
 
-RUN apk --update --no-cache add make git g++
+RUN apk --update --no-cache add make git g++ linux-headers
 # DEBUG
 RUN apk add busybox-extras
 
