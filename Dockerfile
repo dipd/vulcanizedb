@@ -21,11 +21,19 @@ WORKDIR /go/src/github.com/vulcanize/vulcanizedb
 FROM alpine
 WORKDIR /app
 
+RUN apk update \
+        && apk upgrade \
+        && apk add --no-cache \
+        ca-certificates \
+        && update-ca-certificates 2>/dev/null || true
+
 ARG USER
 ARG config_file=environments/example.toml
 ARG vdb_command=headerSync
-ARG vdb_pg_connect="postgres://$USER@/vulcanize_public?sslmode=disable"
+ARG vdb_pg_host="host.docker.internal"
+ARG vdb_pg_port="5432"
 ARG vdb_dbname="vulcanize_public"
+ARG vdb_pg_connect="postgres://$USER@$vdb_pg_host:$vdb_pg_port/$vdb_dbname?sslmode=disable"
 
 # setup environment
 ENV VDB_COMMAND="$vdb_command"
