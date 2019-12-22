@@ -4,17 +4,15 @@ RUN apk --update --no-cache add make git g++ linux-headers
 # DEBUG
 RUN apk add busybox-extras
 
-# Build statically linked vDB binary (wonky path because of Dep)
-WORKDIR /go/src/github.com/vulcanize/vulcanizedb
-ADD . .
-RUN GCO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' .
-
-# Build migration tool
+# build migration tool
 RUN go get -u -d github.com/pressly/goose/cmd/goose
 WORKDIR /go/src/github.com/pressly/goose/cmd/goose
 RUN GCO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -tags='no_mysql no_sqlite' -o goose
 
+# build statically linked vDB binary (wonky path because of Dep)
 WORKDIR /go/src/github.com/vulcanize/vulcanizedb
+ADD . .
+RUN GCO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' .
 
 
 # app container
@@ -30,7 +28,7 @@ RUN apk update \
 ARG USER
 ARG config_file=environments/example.toml
 ARG vdb_command=headerSync
-ARG vdb_pg_host="host.docker.internal"
+ARG vdb_pg_host="localhost"
 ARG vdb_pg_port="5432"
 ARG vdb_dbname="vulcanize_public"
 ARG vdb_pg_connect="postgres://$USER@$vdb_pg_host:$vdb_pg_port/$vdb_dbname?sslmode=disable"
